@@ -1,239 +1,389 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Let's Go!</title>
-    <style>
-      body {
-        margin: 0;
-        padding: 0;
-        font-family: Arial, sans-serif;
-        scroll-behavior: smooth;
-      }
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Let's Go!</title>
+  <style>
+    /* CSS Variables */
+    :root {
+      --primary-color: #2980b9;
+      --primary-color-dark: #1c5d8a;
+      --sidebar-bg: #CBE4FE;
+      --image-border: #90D5FF;
+      --text-color: #000;
+      --overlay-color: rgba(255, 255, 255, 0.7);
+    }
 
-      .container {
-        display: flex;
-      }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      scroll-behavior: smooth;
+      color: var(--text-color);
+    }
 
+    .container {
+      display: flex;
+      flex-wrap: nowrap;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 200px;
+      height: 100vh;
+      background-color: var(--sidebar-bg);
+      color: var(--text-color);
+      box-sizing: border-box;
+      position: fixed;
+      padding: 20px;
+      overflow-y: auto;
+      z-index: 1000;
+    }
+
+    .sidebar a {
+      display: block;
+      color: var(--text-color);
+      text-decoration: none;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .sidebar a:hover,
+    .sidebar a:focus {
+      background-color: var(--primary-color);
+      color: white;
+      outline: none;
+    }
+
+    .content {
+      flex: 1;
+      padding: 20px;
+      margin-left: 220px;
+      min-width: 0; /* prevent overflow on flex items */
+    }
+
+    #home, #book, #courses, #jobs, #about, #contact {
+      scroll-margin-top: 70px;
+      padding-top: 20px;
+      margin-bottom: 60px;
+    }
+
+    #home {
+      background: url(https://i.pinimg.com/originals/3f/00/4f/3f004fbd0825ffbd4b9b11656a38f451.gif);
+      background-repeat: no-repeat;
+      background-size: 960px 900px;
+      background-position: center top;
+      padding: 40px 20px;
+      border-radius: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    #home::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--overlay-color);
+      z-index: -1;
+      border-radius: 12px;
+    }
+
+    .image-box {
+      background-color: peachpuff;
+      padding: 20px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-top: 20px;
+      width: fit-content;
+      max-width: 100%;
+      flex-wrap: wrap;
+    }
+
+    .image-box img {
+      width: 300px;
+      height: 150px;
+      border-radius: 10px;
+      border: 5px solid var(--image-border);
+      object-fit: cover;
+    }
+
+    .box-text {
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+      max-width: 200px;
+      word-wrap: break-word;
+    }
+
+    .booking-form {
+      margin-top: 20px;
+    }
+
+    .booking-form label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .booking-form input,
+    .booking-form select {
+      padding: 8px;
+      width: 250px;
+      max-width: 100%;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    .booking-form input[type="submit"] {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      margin-top: 15px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      border-radius: 6px;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+
+    .booking-form input[type="submit"]:hover,
+    .booking-form input[type="submit"]:focus {
+      background-color: var(--primary-color-dark);
+      outline: none;
+    }
+
+    /* Focus outlines for accessibility */
+    .sidebar a:focus,
+    .booking-form input:focus,
+    .booking-form select:focus {
+      outline: 3px solid var(--primary-color);
+      outline-offset: 2px;
+    }
+
+    /* Back to top button */
+    #topBtn {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px 15px;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      z-index: 999;
+      font-size: 18px;
+      transition: background-color 0.3s;
+    }
+    #topBtn:hover,
+    #topBtn:focus {
+      background-color: var(--primary-color-dark);
+      outline: none;
+    }
+
+    /* Responsive sidebar */
+    @media (max-width: 768px) {
       .sidebar {
-        width: 200px;
-        height: 100vh;
-        background-color: #CBE4FE;
-        color: #000;
-        box-sizing: border-box;
-        position: fixed;
-        padding: 20px;
-      }
-
-      .sidebar a {
-        display: block;
-        color: #000;
-        text-decoration: none;
-        padding: 10px;
-        margin-bottom: 10px;
-        transition: background-color 0.3s;
-      }
-
-      .sidebar a:hover {
-        background-color: #2980b9;
-        color: #fff;
-      }
-
-      .content {
-        flex: 1;
-        padding: 20px;
-        margin-left: 220px;
-      }
-
-      #home, #book, #courses, #jobs, #about, #contact {
-        scroll-margin-top: 70px;
-        padding-top: 20px;
-        margin-bottom: 60px;
-      }
-
-      #home {
-        background: url(https://i.pinimg.com/originals/3f/00/4f/3f004fbd0825ffbd4b9b11656a38f451.gif);
-        background-repeat: no-repeat;
-        background-size: 860px 800px;
-        background-position: center top;
-        padding: 40px 20px;
-        border-radius: 12px;
-        position: relative;
-        z-index: 1;
-      }
-
-      #home::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
+        position: static;
         width: 100%;
-        height: 100%;
-        background: rgba(255, 255, 255, 0.7);
-        z-index: -1;
-        border-radius: 12px;
-      }
-
-      .image-box {
-        background-color: peachpuff;
-        padding: 20px;
-        border-radius: 12px;
+        height: auto;
+        padding: 10px;
         display: flex;
-        align-items: center;
-        gap: 20px;
-        margin-top: 20px;
-        width: fit-content;
+        flex-wrap: wrap;
+        justify-content: center;
       }
-
+      .sidebar a {
+        margin: 5px 10px;
+        padding: 8px 12px;
+        flex: 1 0 auto;
+        text-align: center;
+      }
+      .content {
+        margin-left: 0;
+        padding: 15px 10px;
+      }
+      .image-box {
+        flex-direction: column;
+        align-items: flex-start;
+      }
       .image-box img {
-        width: 300px;
-        height: 150px;
-        border-radius: 10px;
-        border: 5px solid #90D5FF;
+        width: 100%;
+        height: auto;
       }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav class="sidebar" aria-label="Primary navigation">
+      <a href="#home" tabindex="0">Home</a>
+      <a href="#book" tabindex="0">Book a Flight</a>
+      <a href="#courses" tabindex="0">Courses</a>
+      <a href="#jobs" tabindex="0">Jobs</a>
+      <a href="#about" tabindex="0">About</a>
+      <a href="#contact" tabindex="0">Contact</a>
+    </nav>
 
-      .box-text {
-        font-size: 16px;
-        font-weight: bold;
-        color: #333;
-        max-width: 200px;
-      }
-
-      .booking-form {
-        margin-top: 20px;
-      }
-
-      .booking-form label {
-        display: block;
-        margin-top: 10px;
-        font-weight: bold;
-      }
-
-      .booking-form input, .booking-form select {
-        padding: 8px;
-        width: 250px;
-        margin-top: 5px;
-        border-radius: 6px;
-        border: 1px solid #ccc;
-      }
-
-      .booking-form input[type="submit"] {
-        background-color: #2980b9;
-        color: white;
-        border: none;
-        margin-top: 15px;
-        cursor: pointer;
-      }
-
-      .booking-form input[type="submit"]:hover {
-        background-color: #1c5d8a;
-      }
-    </style>
-  </head>
-
-  <body>
-    <div class="container">
-      <div class="sidebar">
-        <a href="#home">Home</a>
-        <a href="#book">Book a Flight</a>
-        <a href="#courses">Courses</a>
-        <a href="#jobs">Jobs</a>
-        <a href="#about">About</a>
-        <a href="#contact">Contact</a>
-      </div>
-
-      <div class="content">
-        <div id="home">
-          <h1>Let's Go</h1>
-          <h3>A website to elevate your vacation experience</h3>
-          <div class="image-box">
-            <img
-              src="https://i0.wp.com/beautahfulworld.com/wp-content/uploads/2019/12/Snapseed.jpg?resize=1038%2C576&ssl=1"
-              alt="Scenic view"
-            />
-            <p class="box-text">Experience beauty around the world 🌍</p>
-          </div>
+    <main class="content">
+      <section id="home" tabindex="-1" aria-label="Home section">
+        <h1>Let's Go</h1>
+        <h3>A website to elevate your vacation experience</h3>
+        <div class="image-box">
+          <img
+            src="https://i0.wp.com/beautahfulworld.com/wp-content/uploads/2019/12/Snapseed.jpg?resize=1038%2C576&ssl=1"
+            alt="Scenic view"
+          />
+          <p class="box-text">Experience beauty around the world 🌍</p>
         </div>
+      </section>
 
-        <div id="book">
-          <h1>Book a Flight</h1>
-          <p>Find the best flights for your dream vacation with top deals and comfort.</p>
+      <section id="book" tabindex="-1" aria-label="Book a flight section">
+        <h1>Book a Flight</h1>
+        <p>Find the best flights for your dream vacation with top deals and comfort.</p>
 
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18..."
-            width="400"
-            height="300"
-            style="border:0;"
-            allowfullscreen
-            loading="lazy">
-          </iframe>
+        <!-- NOTE: Replace the src below with a full valid Google Maps embed URL -->
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.0861965443014!2d-122.40135178468179!3d37.78799417975748!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80858064f96f245b%3A0x9c8e9a9958db72b2!2sSalesforce%20Tower!5e0!3m2!1sen!2sus!4v1689578652872!5m2!1sen!2sus"
+          width="400"
+          height="300"
+          style="border:0;"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="Google Maps embed"
+        ></iframe>
 
-          <div class="booking-form">
-            <form>
-              <label for="destination">Destination:</label>
-              <input type="text" id="destination" name="destination">
+        <div class="booking-form">
+          <form id="bookingForm" aria-label="Flight booking form">
+            <label for="destination">Destination:</label>
+            <input type="text" id="destination" name="destination" required />
 
-              <label for="departure">Departure Date:</label>
-              <input type="date" id="departure" name="departure">
+            <label for="departure">Departure Date:</label>
+            <input type="date" id="departure" name="departure" required />
 
-              <label for="return">Return Date:</label>
-              <input type="date" id="return" name="return">
+            <label for="return">Return Date:</label>
+            <input type="date" id="return" name="return" required />
 
-              <label for="class">Class:</label>
-              <select id="class" name="class">
-                <option value="economy">Economy</option>
-                <option value="business">Business</option>
-                <option value="first">First Class</option>
-              </select>
+            <label for="class">Class:</label>
+            <select id="class" name="class" required>
+              <option value="economy" selected>Economy</option>
+              <option value="business">Business</option>
+              <option value="first">First Class</option>
+            </select>
 
-              <input type="submit" value="Book Now">
-            </form>
-            <p id="formMessage" style="color: green; font-weight: bold;"></p>
-          </div>
+            <input type="submit" value="Book Now" />
+          </form>
+          <p id="formMessage" style="color: green; font-weight: bold; margin-top: 10px;"></p>
         </div>
+      </section>
 
-        <div id="courses">
-          <h1>Courses</h1>
-          <p>
-            Take online travel courses to learn how to pack, budget, and explore safely.
-            And talk to our AI assistant that will find you the most popular and highly rated
-            hotels, restaurants, etc.
-          </p>
-        </div>
+      <section id="courses" tabindex="-1" aria-label="Courses section">
+        <h1>Courses</h1>
+        <p>
+          Take online travel courses to learn how to pack, budget, and explore safely.
+          And talk to our AI assistant that will find you the most popular and highly rated
+          hotels, restaurants, etc.
+        </p>
+      </section>
 
-        <div id="jobs">
-          <h1>Jobs</h1>
-          <p>Explore travel-related careers and remote job opportunities that let you work while you travel.</p>
-        </div>
+      <section id="jobs" tabindex="-1" aria-label="Jobs section">
+        <h1>Jobs</h1>
+        <p>Explore travel-related careers and remote job opportunities that let you work while you travel.</p>
+      </section>
 
-        <div id="about">
-          <h1>About</h1>
-          <p>Let's Go is your partner in planning meaningful and memorable trips all over the globe.</p>
-        </div>
+      <section id="about" tabindex="-1" aria-label="About section">
+        <h1>About</h1>
+        <p>Let's Go is your partner in planning meaningful and memorable trips all over the globe.</p>
+      </section>
 
-        <div id="contact">
-          <h1>Contact</h1>
-          <p>Have questions? Reach out to us anytime at travel@letsgo.com or call 1-800-TRAVEL.</p>
-        </div>
-        <script src="script.js"></script>
-        <button id="topBtn" onclick="scrollToTop()" style="
-  display: none;
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  padding: 10px 15px;
-  background-color: #2980b9;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  z-index: 999;
-">
-  ↑ Top
-</button>
+      <section id="contact" tabindex="-1" aria-label="Contact section">
+        <h1>Contact</h1>
+        <p>Have questions? Reach out to us anytime at travel@letsgo.com or call 1-800-TRAVEL.</p>
+      </section>
 
-      </div>
-    </div>
-  </body>
+      <button id="topBtn" onclick="scrollToTop()" aria-label="Back to top">
+        ↑ Top
+      </button>
+    </main>
+  </div>
+
+  <script>
+    window.addEventListener("load", () => {
+      const today = new Date().toISOString().split("T")[0];
+
+      // Set departure date to today
+      const dateField = document.getElementById("departure");
+      if (dateField) {
+        dateField.value = today;
+        dateField.min = today; // prevent selecting past dates
+      }
+
+      // Set return date to 3 days from today
+      const returnField = document.getElementById("return");
+      if (returnField) {
+        const departureDate = new Date(today);
+        departureDate.setDate(departureDate.getDate() + 3);
+        const returnDateStr = departureDate.toISOString().split("T")[0];
+        returnField.value = returnDateStr;
+        returnField.min = today;
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("bookingForm");
+      const msg = document.getElementById("formMessage");
+
+      if (form) {
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          // Simple validation: Return date after departure date
+          const departure = new Date(form.departure.value);
+          const returnDate = new Date(form.return.value);
+          if (returnDate <= departure) {
+            msg.style.color = "red";
+            msg.textContent = "❌ Return date must be after departure date.";
+            return;
+          }
+
+          // Success message
+          msg.style.color = "green";
+          msg.textContent = `✅ Your flight to ${form.destination.value.trim()} has been booked!`;
+
+          alert("✅ Your flight has been booked! (Not really, but looks cool 😎)");
+          form.reset();
+
+          // Reset dates again to defaults after reset
+          const today = new Date().toISOString().split("T")[0];
+          form.departure.value = today;
+          const departureDate = new Date(today);
+          departureDate.setDate(departureDate.getDate() + 3);
+          form.return.value = departureDate.toISOString().split("T")[0];
+        });
+      }
+    });
+
+    window.onscroll = function () {
+      const topBtn = document.getElementById("topBtn");
+      if (topBtn) {
+        topBtn.style.display = window.scrollY > 300 ? "block" : "none";
+      }
+    };
+
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  </script>
+</body>
 </html>
