@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (form) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      alert("✅ Your flight has been booked! (Not really, but looks cool 😎)");
+      alert("Your flight has been booked (Not really)");
     });
   }
 });
